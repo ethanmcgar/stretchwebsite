@@ -131,20 +131,23 @@ body {
     height: 100%;
     z-index: 1;
 
-    /* NEW: background image setup */
+    /* NEW: Send the whole container firmly behind everything */
+    pointer-events: none;
 }
 
-/* REMOVE THE NEED FOR THIS IMG — but keep class in case HTML uses it (harmless) */
 .hero-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     min-height: 90vh;
 
-    /* NEW: make sure it doesn’t block the background */
-    opacity: 0;
-    pointer-events: none;
+    /* NEW: Make sure it is BELOW the overlay */
+    z-index: 0;
+    position: absolute;  /* required for z-index to take effect */
+    top: 0;
+    left: 0;
 }
+
 
 /* Overlay stays unchanged (just sits on top of bg image) */
 .hero-overlay {
@@ -884,6 +887,7 @@ section {
         grid-template-columns: 1fr;
     }
 }
+
 
 
 
