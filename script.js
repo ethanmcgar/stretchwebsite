@@ -201,6 +201,10 @@ document.querySelectorAll(".video-thumbnail-date").forEach(el => {
    Contact Modal + mailto send
 ----------------------------- */
 
+/* -----------------------------
+   Contact Modal + EmailJS send
+----------------------------- */
+
 document.addEventListener('DOMContentLoaded', () => {
     const contactButton = document.getElementById('contactButton');
     const contactModal = document.getElementById('contact-modal');
@@ -208,18 +212,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBackdrop = document.querySelector('.modal-backdrop');
     const contactModalForm = document.getElementById('contactModalForm');
 
+    // Open modal
     if (contactButton && contactModal) {
-        // Open modal
         contactButton.addEventListener('click', () => {
             contactModal.classList.add('open');
-            // Optional: reset form when opened
             if (contactModalForm) contactModalForm.reset();
         });
     }
 
     // Close modal helpers
     function closeModal() {
-        contactModal.classList.remove('open');
+        if (contactModal) {
+            contactModal.classList.remove('open');
+        }
     }
 
     if (modalClose) {
@@ -230,32 +235,29 @@ document.addEventListener('DOMContentLoaded', () => {
         modalBackdrop.addEventListener('click', closeModal);
     }
 
-    // Close on Escape key
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && contactModal.classList.contains('open')) {
+        if (e.key === 'Escape' && contactModal && contactModal.classList.contains('open')) {
             closeModal();
         }
     });
 
-    // Handle form submission via mailto
+    // Handle form submission via EmailJS
     if (contactModalForm) {
         contactModalForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const name = document.getElementById('modal-name').value.trim();
-            const email = document.getElementById('modal-email').value.trim();
-            const message = document.getElementById('modal-message').value.trim();
+            // Optional: you can show a "sending..." state here
 
-            const to = 'aidanstretch01@gmail.com';
-            const subject = encodeURIComponent(`New message from ${name}`);
-            const body = encodeURIComponent(
-                `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-            );
-
-            // Open default mail client with pre-filled email
-            window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
-
-            closeModal();
+            emailjs
+                .sendForm('service_5bx7shp', 'template_nr6m35d', '#contactModalForm')
+                .then(() => {
+                    alert('Thank you — your message has been sent!');
+                    closeModal();
+                })
+                .catch((error) => {
+                    console.error('EmailJS error:', error);
+                    alert('Sorry, something went wrong sending your message. Please try again later.');
+                });
         });
     }
 });
