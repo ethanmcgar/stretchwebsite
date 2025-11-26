@@ -196,3 +196,68 @@ document.querySelectorAll(".video-thumbnail-date").forEach(el => {
         el.textContent = timeAgo(date);
     }
 });
+
+/* -----------------------------
+   Contact Modal + mailto send
+----------------------------- */
+
+document.addEventListener('DOMContentLoaded', () => {
+    const contactButton = document.getElementById('contactButton');
+    const contactModal = document.getElementById('contact-modal');
+    const modalClose = document.querySelector('.modal-close');
+    const modalBackdrop = document.querySelector('.modal-backdrop');
+    const contactModalForm = document.getElementById('contactModalForm');
+
+    if (contactButton && contactModal) {
+        // Open modal
+        contactButton.addEventListener('click', () => {
+            contactModal.classList.add('open');
+            // Optional: reset form when opened
+            if (contactModalForm) contactModalForm.reset();
+        });
+    }
+
+    // Close modal helpers
+    function closeModal() {
+        contactModal.classList.remove('open');
+    }
+
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+
+    if (modalBackdrop) {
+        modalBackdrop.addEventListener('click', closeModal);
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && contactModal.classList.contains('open')) {
+            closeModal();
+        }
+    });
+
+    // Handle form submission via mailto
+    if (contactModalForm) {
+        contactModalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('modal-name').value.trim();
+            const email = document.getElementById('modal-email').value.trim();
+            const message = document.getElementById('modal-message').value.trim();
+
+            const to = 'stevan.kamatovic@gmail.com';
+            const subject = encodeURIComponent(`New message from ${name}`);
+            const body = encodeURIComponent(
+                `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+            );
+
+            // Open default mail client with pre-filled email
+            window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+
+            closeModal();
+        });
+    }
+});
+
+
