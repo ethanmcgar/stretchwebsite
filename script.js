@@ -78,16 +78,9 @@ if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        // Get form values
         const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const message = document.getElementById('message').value;
+        alert(`Thank you for your message, ${name}! Your message has been received.`);
         
-        // In a real application, you would send this data to a server
-        // For now, we'll just show an alert
-        alert(`Thank you for your message, ${name}! Your message has been received. In a production environment, this would be sent to the server.`);
-        
-        // Reset form
         contactForm.reset();
     });
 }
@@ -107,7 +100,6 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe elements for animation
 document.addEventListener('DOMContentLoaded', () => {
     const animateElements = document.querySelectorAll('.timeline-item, .skill-item, .publication-card, .education-item');
     
@@ -119,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Scroll to top functionality (optional enhancement)
+// Scroll to top button
 let scrollToTopBtn = document.createElement('button');
 scrollToTopBtn.innerHTML = '↑';
 scrollToTopBtn.className = 'scroll-to-top';
@@ -169,3 +161,38 @@ scrollToTopBtn.addEventListener('mouseleave', () => {
     scrollToTopBtn.style.transform = 'translateY(0)';
 });
 
+
+
+/* -------------------------------------------
+   ✔ Dynamic "time ago" for video-thumbnail-date
+-------------------------------------------- */
+
+function timeAgo(dateString) {
+    const now = new Date();
+    const past = new Date(dateString);
+    const seconds = Math.floor((now - past) / 1000);
+
+    const intervals = {
+        year: 31536000,
+        month: 2592000,
+        week: 604800,
+        day: 86400,
+        hour: 3600,
+        minute: 60
+    };
+
+    for (const key in intervals) {
+        const interval = Math.floor(seconds / intervals[key]);
+        if (interval >= 1) {
+            return `${interval} ${key}${interval > 1 ? "s" : ""} ago`;
+        }
+    }
+    return "Just now";
+}
+
+document.querySelectorAll(".video-thumbnail-date").forEach(el => {
+    const date = el.getAttribute("data-published");
+    if (date) {
+        el.textContent = timeAgo(date);
+    }
+});
