@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('modal-email').value.trim();
             const message = document.getElementById('modal-message').value.trim();
 
-            const to = 'stevan.kamatovic@gmail.com';
+            const to = 'aidanstretch01@gmail.com';
             const subject = encodeURIComponent(`New message from ${name}`);
             const body = encodeURIComponent(
                 `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
@@ -259,5 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 
 
