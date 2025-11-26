@@ -45,6 +45,7 @@
                             <button class="btn btn-primary" id="contactButton">Contact</button>
                         </div>
 
+
                     </div>
                 </div>
             </div>
@@ -274,6 +275,7 @@
     </section>
 -->
         <!-- Contact Modal -->
+        <!-- Contact Modal -->
     <div id="contact-modal" class="modal">
         <div class="modal-backdrop"></div>
         <div class="modal-dialog">
@@ -283,11 +285,11 @@
             <form id="contactModalForm" class="modal-form">
                 <div class="form-group">
                     <label for="modal-name">Name</label>
-                    <input type="text" id="modal-name" name="name" required>
+                    <input type="text" id="modal-name" name="from_name" required>
                 </div>
                 <div class="form-group">
                     <label for="modal-email">Your Email</label>
-                    <input type="email" id="modal-email" name="email" required>
+                    <input type="email" id="modal-email" name="reply_to" required>
                 </div>
                 <div class="form-group">
                     <label for="modal-message">Message</label>
@@ -297,6 +299,7 @@
             </form>
         </div>
     </div>
+
 
     <!-- Footer -->
     <footer class="footer">
@@ -308,10 +311,19 @@
             </div>
         </div>
     </footer>
+    <script src="https://cdn.emailjs.com/sdk/3.11.0/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init({
+                publicKey: '_84eY4ppSzQCUkW8u',
+            });
+        })();
+    </script>
 
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
