@@ -740,6 +740,69 @@ section {
     border-color: var(--text-dark);
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
+/* Modal (Contact Popup) */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-dialog {
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
+    border-radius: 0.75rem;
+    max-width: 480px;
+    width: 90%;
+    padding: 2rem 2.25rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.modal-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+    font-weight: 700;
+}
+
+.modal-subtitle {
+    font-size: 0.9375rem;
+    color: var(--text-light);
+    margin-bottom: 1.25rem;
+}
+
+.modal-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.modal-form .form-group input,
+.modal-form .form-group textarea {
+    width: 100%;
+}
+
 
 /* Footer */
 .footer {
@@ -886,6 +949,7 @@ section {
         grid-template-columns: 1fr;
     }
 }
+
 
 
 
