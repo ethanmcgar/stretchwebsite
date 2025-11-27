@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Professional portfolio of Aidan Stretch - American journalist reporting from Ukraine">
+    <!-- Content Security Policy: Allow EmailJS and external scripts -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://cdn.emailjs.com https://*.emailjs.com; connect-src 'self' https://api.emailjs.com https://*.emailjs.com;">
     <title>Aidan Stretch - Professional Portfolio</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -311,21 +313,44 @@
             </div>
         </div>
     </footer>
-    <script src="https://cdn.emailjs.com/sdk/3.11.0/email.min.js"></script>
+    <!-- EmailJS SDK with error handling for Cloudflare -->
+    <script src="https://cdn.emailjs.com/sdk/3.11.0/email.min.js" 
+            onerror="console.error('Failed to load EmailJS script'); window.emailjsLoadError = true;"
+            onload="console.log('EmailJS script loaded successfully'); window.emailjsScriptLoaded = true;"></script>
     <script>
-        // Wait for EmailJS to load before initializing
+        // Wait for EmailJS to load before initializing (with increased retry for Cloudflare)
         (function() {
+            let retryCount = 0;
+            const maxRetries = 50; // 5 seconds max wait time (50 * 100ms)
+            
             function initEmailJS() {
+                // Check if script failed to load
+                if (window.emailjsLoadError) {
+                    console.error('EmailJS script failed to load. Check Cloudflare settings or network connection.');
+                    return;
+                }
+                
                 if (typeof emailjs !== 'undefined') {
-                    emailjs.init({
-                        publicKey: '_84eY4ppSzQCUkW8u',
-                    });
-                    console.log('EmailJS initialized successfully');
+                    try {
+                        emailjs.init({
+                            publicKey: '_84eY4ppSzQCUkW8u',
+                        });
+                        console.log('EmailJS initialized successfully');
+                        window.emailjsReady = true;
+                    } catch (error) {
+                        console.error('Error initializing EmailJS:', error);
+                    }
                 } else {
-                    // Retry after a short delay if EmailJS isn't loaded yet
-                    setTimeout(initEmailJS, 100);
+                    retryCount++;
+                    if (retryCount < maxRetries) {
+                        // Retry after a short delay if EmailJS isn't loaded yet
+                        setTimeout(initEmailJS, 100);
+                    } else {
+                        console.error('EmailJS failed to load after maximum retries. Check Cloudflare CSP settings.');
+                    }
                 }
             }
+            
             // Start initialization when DOM is ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initEmailJS);

@@ -88,10 +88,32 @@ The website uses CSS variables for easy theming. Edit the `:root` section in `st
 
 ### Contact Form
 
-The contact form currently shows an alert on submission. To make it functional:
+The contact form uses EmailJS to send emails. To configure:
 
-1. Set up a backend service (e.g., Formspree, Netlify Forms, or your own server)
-2. Update the form action in `index.html` or modify the JavaScript in `script.js` to send data to your endpoint
+1. Set up an EmailJS account at https://www.emailjs.com/
+2. Configure your EmailJS service and template
+3. Update the EmailJS configuration in `script.js` (serviceId, templateId, recipientEmail)
+
+#### Cloudflare Configuration
+
+If hosting on Cloudflare Pages or Workers, ensure EmailJS scripts are allowed:
+
+1. **Cloudflare Dashboard Settings:**
+   - Go to your Cloudflare dashboard
+   - Navigate to Security → WAF → Tools
+   - Ensure "EmailJS" or external scripts aren't blocked
+   - Check Security → Settings → Content Security Policy (if enabled)
+
+2. **_headers file:**
+   - The `_headers` file in the root directory configures CSP for Cloudflare Pages
+   - It allows EmailJS scripts and API calls
+   - Deploy this file with your site
+
+3. **Troubleshooting:**
+   - Open browser console (F12) and check for CSP errors
+   - Verify EmailJS script loads: Look for "EmailJS script loaded successfully"
+   - Check network tab to see if `cdn.emailjs.com` requests are blocked
+   - If blocked, adjust Cloudflare security settings or CSP headers
 
 ## Browser Support
 

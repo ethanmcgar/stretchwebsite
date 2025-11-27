@@ -275,14 +275,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Verify EmailJS is loaded and initialized
             if (typeof emailjs === 'undefined') {
-                alert('Error: EmailJS is not loaded. Please check your internet connection and refresh the page.');
+                let errorMsg = 'Error: EmailJS is not loaded. ';
+                if (window.emailjsLoadError) {
+                    errorMsg += 'The EmailJS script failed to load. This may be due to Cloudflare security settings blocking external scripts.';
+                } else {
+                    errorMsg += 'Please check your internet connection and refresh the page.';
+                }
+                alert(errorMsg);
                 console.error('EmailJS is not defined. Make sure the EmailJS script is loaded.');
+                console.error('If using Cloudflare, check Content Security Policy settings in Cloudflare dashboard.');
                 return;
             }
             
             // Check if EmailJS is initialized (has a send method)
             if (typeof emailjs.send !== 'function') {
-                alert('Error: EmailJS is not fully initialized. Please wait a moment and try again.');
+                let errorMsg = 'Error: EmailJS is not fully initialized. ';
+                if (!window.emailjsReady) {
+                    errorMsg += 'EmailJS may still be loading. Please wait a moment and try again.';
+                } else {
+                    errorMsg += 'There may be a configuration issue.';
+                }
+                alert(errorMsg);
                 console.error('EmailJS.send is not available. EmailJS may not be initialized yet.');
                 return;
             }
