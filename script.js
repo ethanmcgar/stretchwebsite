@@ -206,6 +206,8 @@ document.querySelectorAll(".video-thumbnail-date").forEach(el => {
 ----------------------------- */
 
 // EmailJS Configuration
+// Note: Public Key is set in index.html as window.EMAILJS_PUBLIC_KEY
+// Update it there if you need to change it
 const EMAILJS_CONFIG = {
     serviceId: 'service_5bx7shp',
     templateId: 'template_nr6m35d',

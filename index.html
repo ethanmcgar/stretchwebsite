@@ -314,6 +314,12 @@
             </div>
         </div>
     </footer>
+    <!-- EmailJS Configuration (must be before EmailJS script loads) -->
+    <script>
+        // EmailJS Public Key - UPDATE THIS with your actual public key from https://dashboard.emailjs.com/admin/account
+        window.EMAILJS_PUBLIC_KEY = '_84eY4ppSzQCUkW8u';
+    </script>
+    
     <!-- EmailJS SDK - Load with multiple fallback methods -->
     <script>
         // Load EmailJS script with comprehensive error handling and fallbacks
@@ -321,8 +327,9 @@
             let loadAttempt = 0;
             const maxAttempts = 3;
             const cdnUrls = [
-                'https://cdn.emailjs.com/sdk/3.11.0/email.min.js',
-                'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js'
+                'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js',
+                'https://cdn.emailjs.com/dist/email.min.js',
+                'https://unpkg.com/@emailjs/browser@3/dist/email.min.js'
             ];
             
             function loadEmailJS(urlIndex = 0) {
@@ -389,13 +396,23 @@
                 function tryInit() {
                     if (typeof emailjs !== 'undefined') {
                         try {
+                            // Get public key from window variable (set above) or fallback
+                            const publicKey = window.EMAILJS_PUBLIC_KEY || '_84eY4ppSzQCUkW8u';
+                            console.log('Initializing EmailJS with public key:', publicKey.substring(0, 10) + '...');
                             emailjs.init({
-                                publicKey: '_84eY4ppSzQCUkW8u',
+                                publicKey: publicKey,
                             });
                             console.log('EmailJS initialized successfully');
                             window.emailjsReady = true;
                         } catch (error) {
                             console.error('Error initializing EmailJS:', error);
+                            if (error.text && error.text.includes('Public Key is invalid')) {
+                                console.error('⚠️ INVALID PUBLIC KEY!');
+                                console.error('Current key:', window.EMAILJS_PUBLIC_KEY || 'not set');
+                                console.error('Get your Public Key from: https://dashboard.emailjs.com/admin/account');
+                                console.error('Update window.EMAILJS_PUBLIC_KEY in index.html (around line 320)');
+                                alert('EmailJS Public Key is invalid. Please update it in the code. Check console for details.');
+                            }
                         }
                     } else {
                         retryCount++;
