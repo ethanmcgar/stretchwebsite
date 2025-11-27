@@ -255,46 +255,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle form submission via FormSubmit (simple HTML form - no API keys needed!)
     if (contactModalForm) {
-        contactModalForm.addEventListener('submit', (e) => {
+        contactModalForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent default form submission
+            
             // Validate form before submission
             const name = contactModalForm.querySelector('#modal-name').value;
             const email = contactModalForm.querySelector('#modal-email').value;
             const message = contactModalForm.querySelector('#modal-message').value;
             
             if (!name || !email || !message) {
-                e.preventDefault();
                 alert('Please fill in all required fields.');
                 return;
             }
 
             // Show sending state
             const submitButton = contactModalForm.querySelector('button[type="submit"]');
+            let originalButtonText = '';
             if (submitButton) {
+                originalButtonText = submitButton.textContent;
                 submitButton.disabled = true;
                 submitButton.textContent = 'Sending...';
             }
 
-            // Set redirect URL to close modal after successful submission
-            const nextInput = contactModalForm.querySelector('input[name="_next"]');
-            if (nextInput) {
-                // Redirect to same page with success parameter, then close modal
-                nextInput.value = window.location.href + '?form=success';
-            }
+            try {
+                // Submit form to FormSubmit using fetch
+                const formData = new FormData(contactModalForm);
+                const response = await fetch(contactModalForm.action, {
+                    method: 'POST',
+                    body: formData
+                });
 
-            // Form will submit naturally to FormSubmit
-            // After redirect, we'll close the modal
-            setTimeout(() => {
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.get('form') === 'success') {
+                if (response.ok) {
+                    // Success - FormSubmit will send the email
                     alert('Thank you — your message has been sent!');
                     contactModalForm.reset();
                     closeModal();
-                    // Clean up URL
-                    window.history.replaceState({}, document.title, window.location.pathname);
+                } else {
+                    throw new Error('Form submission failed');
                 }
-            }, 100);
+            } catch (error) {
+                console.error('Form submission error:', error);
+                alert('Sorry, something went wrong sending your message. Please try again later.');
+            } finally {
+                // Reset button state
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalButtonText;
+                }
+            }
         });
     }
+    
+    // Check for success message in URL (if user was redirected back)
+    window.addEventListener('load', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('form') === 'success') {
+            alert('Thank you — your message has been sent!');
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    });
 });
 
 
