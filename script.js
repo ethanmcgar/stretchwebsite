@@ -205,33 +205,16 @@ document.querySelectorAll(".video-thumbnail-date").forEach(el => {
    Contact Modal + EmailJS send
 ----------------------------- */
 
-// EmailJS Configuration
-// Note: Public Key is set in index.html as window.EMAILJS_PUBLIC_KEY
-// Update it there if you need to change it
-const EMAILJS_CONFIG = {
-    serviceId: 'service_5bx7shp',
-    templateId: 'template_nr6m35d',
-    recipientEmail: 'aidanstretch01@gmail.com' // The email address that will receive contact form submissions
-};
-
 /* 
- * EMAILJS SETUP INSTRUCTIONS:
+ * FORMSUBMIT SETUP:
  * 
- * To ensure emails are sent correctly, you need to configure your EmailJS template:
+ * No setup needed! The form is already configured to send emails to:
+ * aidanstretch01@gmail.com
  * 
- * 1. Go to https://dashboard.emailjs.com/
- * 2. Navigate to Email Templates
- * 3. Open template ID: template_nr6m35d
- * 4. In the template settings, configure:
- *    - "To Email" field: Set to {{to_email}} OR set it statically to aidanstretch01@gmail.com
- *    - "From Name": {{from_name}}
- *    - "Reply To": {{reply_to}}
- *    - "Message": {{message}}
+ * FormSubmit is completely free and requires no API keys or registration.
+ * Just update the email address in the form action URL if needed.
  * 
- * 5. Make sure your EmailJS service (service_5bx7shp) is connected to an email provider
- *    (Gmail, Outlook, etc.) and is active
- * 
- * 6. Test the form and check the browser console (F12) for detailed error messages
+ * That's it - pure HTML form submission with zero configuration!
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -270,107 +253,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle form submission via EmailJS
+    // Handle form submission via FormSubmit (simple HTML form - no API keys needed!)
     if (contactModalForm) {
         contactModalForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            // Verify EmailJS is loaded and initialized
-            if (typeof emailjs === 'undefined') {
-                let errorMsg = 'Error: EmailJS is not loaded. ';
-                if (window.emailjsLoadError) {
-                    errorMsg += 'The EmailJS script failed to load. This may be due to Cloudflare security settings blocking external scripts.';
-                } else {
-                    errorMsg += 'Please check your internet connection and refresh the page.';
-                }
-                alert(errorMsg);
-                console.error('EmailJS is not defined. Make sure the EmailJS script is loaded.');
-                console.error('If using Cloudflare, check Content Security Policy settings in Cloudflare dashboard.');
-                return;
-            }
+            // Validate form before submission
+            const name = contactModalForm.querySelector('#modal-name').value;
+            const email = contactModalForm.querySelector('#modal-email').value;
+            const message = contactModalForm.querySelector('#modal-message').value;
             
-            // Check if EmailJS is initialized (has a send method)
-            if (typeof emailjs.send !== 'function') {
-                let errorMsg = 'Error: EmailJS is not fully initialized. ';
-                if (!window.emailjsReady) {
-                    errorMsg += 'EmailJS may still be loading. Please wait a moment and try again.';
-                } else {
-                    errorMsg += 'There may be a configuration issue.';
-                }
-                alert(errorMsg);
-                console.error('EmailJS.send is not available. EmailJS may not be initialized yet.');
-                return;
-            }
-
-            // Get form data
-            const formData = new FormData(contactModalForm);
-            
-            // Validate form data
-            const fromName = formData.get('from_name');
-            const replyTo = formData.get('reply_to');
-            const message = formData.get('message');
-            
-            if (!fromName || !replyTo || !message) {
+            if (!name || !email || !message) {
+                e.preventDefault();
                 alert('Please fill in all required fields.');
                 return;
             }
-            
-            // Prepare template parameters
-            // Note: If your EmailJS template uses a static "To Email" configured in the dashboard,
-            // you don't need to pass to_email. If your template uses {{to_email}}, include it.
-            const templateParams = {
-                from_name: fromName,
-                reply_to: replyTo,
-                message: message,
-                to_email: EMAILJS_CONFIG.recipientEmail
-            };
 
             // Show sending state
             const submitButton = contactModalForm.querySelector('button[type="submit"]');
-            let originalButtonText = '';
-            
             if (submitButton) {
-                originalButtonText = submitButton.textContent;
                 submitButton.disabled = true;
                 submitButton.textContent = 'Sending...';
             }
 
-            // Debug: Log what we're sending
-            console.log('Sending email with params:', templateParams);
-            console.log('EmailJS Config:', EMAILJS_CONFIG);
+            // Set redirect URL to close modal after successful submission
+            const nextInput = contactModalForm.querySelector('input[name="_next"]');
+            if (nextInput) {
+                // Redirect to same page with success parameter, then close modal
+                nextInput.value = window.location.href + '?form=success';
+            }
 
-            // Send email using EmailJS
-            emailjs
-                .send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, templateParams)
-                .then((response) => {
-                    console.log('Email sent successfully!', response);
-                    console.log('Response status:', response.status);
-                    console.log('Response text:', response.text);
-                    alert('Thank you — your message has been sent to ' + EMAILJS_CONFIG.recipientEmail + '!');
+            // Form will submit naturally to FormSubmit
+            // After redirect, we'll close the modal
+            setTimeout(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('form') === 'success') {
+                    alert('Thank you — your message has been sent!');
                     contactModalForm.reset();
                     closeModal();
-                })
-                .catch((error) => {
-                    console.error('EmailJS error details:', error);
-                    console.error('Error status:', error.status);
-                    console.error('Error text:', error.text);
-                    
-                    let errorMessage = 'Sorry, something went wrong sending your message.';
-                    if (error.text) {
-                        errorMessage += '\n\nError: ' + error.text;
-                    }
-                    if (error.status === 400) {
-                        errorMessage += '\n\nThis usually means the EmailJS template is not configured correctly.';
-                        errorMessage += '\nPlease check that your template uses the correct variable names.';
-                    }
-                    alert(errorMessage);
-                })
-                .finally(() => {
-                    if (submitButton) {
-                        submitButton.disabled = false;
-                        submitButton.textContent = originalButtonText;
-                    }
-                });
+                    // Clean up URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }, 100);
         });
     }
 });

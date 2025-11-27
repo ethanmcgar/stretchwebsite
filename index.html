@@ -285,14 +285,20 @@
             <button class="modal-close" aria-label="Close contact form">&times;</button>
             <h2 class="modal-title">Contact Aidan</h2>
             <p class="modal-subtitle">Send a message directly to my inbox.</p>
-            <form id="contactModalForm" class="modal-form">
+            <form id="contactModalForm" class="modal-form" action="https://formsubmit.co/aidanstretch01@gmail.com" method="POST">
+                <!-- FormSubmit - No API keys needed! Just your email address in the action URL -->
+                <input type="hidden" name="_subject" value="New Contact Form Submission from Aidan Stretch Website">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="box">
+                <input type="hidden" name="_next" value="">
+                
                 <div class="form-group">
                     <label for="modal-name">Name</label>
-                    <input type="text" id="modal-name" name="from_name" required>
+                    <input type="text" id="modal-name" name="name" required>
                 </div>
                 <div class="form-group">
                     <label for="modal-email">Your Email</label>
-                    <input type="email" id="modal-email" name="reply_to" required>
+                    <input type="email" id="modal-email" name="email" required>
                 </div>
                 <div class="form-group">
                     <label for="modal-message">Message</label>
@@ -314,130 +320,6 @@
             </div>
         </div>
     </footer>
-    <!-- EmailJS Configuration (must be before EmailJS script loads) -->
-    <script>
-        // EmailJS Public Key - UPDATE THIS with your actual public key from https://dashboard.emailjs.com/admin/account
-        window.EMAILJS_PUBLIC_KEY = 'PvBHofjpJuaSlRUL1';
-    </script>
-    
-    <!-- EmailJS SDK - Load with multiple fallback methods -->
-    <script>
-        // Load EmailJS script with comprehensive error handling and fallbacks
-        (function() {
-            let loadAttempt = 0;
-            const maxAttempts = 3;
-            const cdnUrls = [
-                'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js',
-                'https://cdn.emailjs.com/dist/email.min.js',
-                'https://unpkg.com/@emailjs/browser@3/dist/email.min.js'
-            ];
-            
-            function loadEmailJS(urlIndex = 0) {
-                if (urlIndex >= cdnUrls.length) {
-                    console.error('All EmailJS CDN attempts failed');
-                    window.emailjsLoadError = true;
-                    return;
-                }
-                
-                const script = document.createElement('script');
-                script.src = cdnUrls[urlIndex];
-                script.async = true;
-                script.crossOrigin = 'anonymous';
-                
-                script.onload = function() {
-                    console.log('EmailJS script loaded successfully from:', cdnUrls[urlIndex]);
-                    window.emailjsScriptLoaded = true;
-                    initEmailJS();
-                };
-                
-                script.onerror = function(error) {
-                    console.error('Failed to load EmailJS from:', cdnUrls[urlIndex], error);
-                    loadAttempt++;
-                    
-                    if (loadAttempt < maxAttempts && urlIndex < cdnUrls.length - 1) {
-                        console.log('Trying fallback CDN...');
-                        loadEmailJS(urlIndex + 1);
-                    } else {
-                        console.error('All EmailJS loading attempts failed');
-                        console.error('This may be due to:');
-                        console.error('1. CSP blocking (check _headers file and Cloudflare dashboard)');
-                        console.error('2. Network/CORS issues');
-                        console.error('3. CDN availability');
-                        
-                        // Check for CSP violations
-                        const cspReport = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
-                        if (cspReport) {
-                            console.error('CSP Meta Tag Found:', cspReport.content);
-                        }
-                        
-                        // Check network tab entries
-                        setTimeout(function() {
-                            const resources = performance.getEntriesByType('resource');
-                            const emailjsResources = resources.filter(r => r.name.includes('emailjs'));
-                            if (emailjsResources.length > 0) {
-                                console.error('EmailJS resource attempts:', emailjsResources);
-                                emailjsResources.forEach(r => {
-                                    console.error('  - URL:', r.name, 'Status:', r.responseStatus || 'unknown', 'Size:', r.transferSize);
-                                });
-                            }
-                        }, 500);
-                        
-                        window.emailjsLoadError = true;
-                    }
-                };
-                
-                document.head.appendChild(script);
-            }
-            
-            function initEmailJS() {
-                let retryCount = 0;
-                const maxRetries = 50; // 5 seconds max wait time
-                
-                function tryInit() {
-                    if (typeof emailjs !== 'undefined') {
-                        try {
-                            // Get public key from window variable (set above) or fallback
-                            const publicKey = window.EMAILJS_PUBLIC_KEY || '_84eY4ppSzQCUkW8u';
-                            console.log('Initializing EmailJS with public key:', publicKey.substring(0, 10) + '...');
-                            emailjs.init({
-                                publicKey: publicKey,
-                            });
-                            console.log('EmailJS initialized successfully');
-                            window.emailjsReady = true;
-                        } catch (error) {
-                            console.error('Error initializing EmailJS:', error);
-                            if (error.text && error.text.includes('Public Key is invalid')) {
-                                console.error('⚠️ INVALID PUBLIC KEY!');
-                                console.error('Current key:', window.EMAILJS_PUBLIC_KEY || 'not set');
-                                console.error('Get your Public Key from: https://dashboard.emailjs.com/admin/account');
-                                console.error('Update window.EMAILJS_PUBLIC_KEY in index.html (around line 320)');
-                                alert('EmailJS Public Key is invalid. Please update it in the code. Check console for details.');
-                            }
-                        }
-                    } else {
-                        retryCount++;
-                        if (retryCount < maxRetries) {
-                            setTimeout(tryInit, 100);
-                        } else {
-                            console.error('EmailJS object not available after script load.');
-                            console.error('Script loaded but emailjs object is undefined. Possible CSP eval restriction.');
-                        }
-                    }
-                }
-                
-                tryInit();
-            }
-            
-            // Start loading when DOM is ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    setTimeout(loadEmailJS, 100); // Small delay to ensure DOM is ready
-                });
-            } else {
-                setTimeout(loadEmailJS, 100);
-            }
-        })();
-    </script>
 
     <script src="script.js"></script>
 </body>
