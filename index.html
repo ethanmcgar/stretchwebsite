@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Professional portfolio of Aidan Stretch - American journalist reporting from Ukraine">
-    <!-- Content Security Policy: Allow EmailJS, Cloudflare Insights, and external scripts -->
-    <!-- Note: If using Cloudflare Pages, the _headers file will override this meta tag -->
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://cdn.emailjs.com https://static.cloudflareinsights.com https://*.cloudflareinsights.com; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://*.cloudflareinsights.com;">
+    <!-- Content Security Policy: Removed meta tag - using _headers file instead -->
+    <!-- If _headers file doesn't work, uncomment the line below for a more permissive CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https:; connect-src 'self' https:;"> -->
     <title>Aidan Stretch - Professional Portfolio</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -314,34 +314,69 @@
             </div>
         </div>
     </footer>
-    <!-- EmailJS SDK - Load dynamically to handle CSP issues -->
+    <!-- EmailJS SDK - Load with multiple fallback methods -->
     <script>
-        // Load EmailJS script dynamically with better error handling
+        // Load EmailJS script with comprehensive error handling and fallbacks
         (function() {
-            function loadEmailJS() {
+            let loadAttempt = 0;
+            const maxAttempts = 3;
+            const cdnUrls = [
+                'https://cdn.emailjs.com/sdk/3.11.0/email.min.js',
+                'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js'
+            ];
+            
+            function loadEmailJS(urlIndex = 0) {
+                if (urlIndex >= cdnUrls.length) {
+                    console.error('All EmailJS CDN attempts failed');
+                    window.emailjsLoadError = true;
+                    return;
+                }
+                
                 const script = document.createElement('script');
-                script.src = 'https://cdn.emailjs.com/sdk/3.11.0/email.min.js';
+                script.src = cdnUrls[urlIndex];
                 script.async = true;
+                script.crossOrigin = 'anonymous';
                 
                 script.onload = function() {
-                    console.log('EmailJS script loaded successfully');
+                    console.log('EmailJS script loaded successfully from:', cdnUrls[urlIndex]);
                     window.emailjsScriptLoaded = true;
                     initEmailJS();
                 };
                 
                 script.onerror = function(error) {
-                    console.error('Failed to load EmailJS script. Error:', error);
-                    console.error('This may be due to CSP blocking. Check Content Security Policy settings.');
-                    window.emailjsLoadError = true;
+                    console.error('Failed to load EmailJS from:', cdnUrls[urlIndex], error);
+                    loadAttempt++;
                     
-                    // Try to detect CSP violation
-                    setTimeout(function() {
+                    if (loadAttempt < maxAttempts && urlIndex < cdnUrls.length - 1) {
+                        console.log('Trying fallback CDN...');
+                        loadEmailJS(urlIndex + 1);
+                    } else {
+                        console.error('All EmailJS loading attempts failed');
+                        console.error('This may be due to:');
+                        console.error('1. CSP blocking (check _headers file and Cloudflare dashboard)');
+                        console.error('2. Network/CORS issues');
+                        console.error('3. CDN availability');
+                        
+                        // Check for CSP violations
                         const cspReport = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
                         if (cspReport) {
-                            console.error('Current CSP:', cspReport.content);
+                            console.error('CSP Meta Tag Found:', cspReport.content);
                         }
-                        console.error('If using Cloudflare, check the _headers file and Cloudflare dashboard CSP settings.');
-                    }, 100);
+                        
+                        // Check network tab entries
+                        setTimeout(function() {
+                            const resources = performance.getEntriesByType('resource');
+                            const emailjsResources = resources.filter(r => r.name.includes('emailjs'));
+                            if (emailjsResources.length > 0) {
+                                console.error('EmailJS resource attempts:', emailjsResources);
+                                emailjsResources.forEach(r => {
+                                    console.error('  - URL:', r.name, 'Status:', r.responseStatus || 'unknown', 'Size:', r.transferSize);
+                                });
+                            }
+                        }, 500);
+                        
+                        window.emailjsLoadError = true;
+                    }
                 };
                 
                 document.head.appendChild(script);
@@ -367,7 +402,8 @@
                         if (retryCount < maxRetries) {
                             setTimeout(tryInit, 100);
                         } else {
-                            console.error('EmailJS object not available after script load. Check for CSP violations.');
+                            console.error('EmailJS object not available after script load.');
+                            console.error('Script loaded but emailjs object is undefined. Possible CSP eval restriction.');
                         }
                     }
                 }
@@ -377,9 +413,11 @@
             
             // Start loading when DOM is ready
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', loadEmailJS);
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(loadEmailJS, 100); // Small delay to ensure DOM is ready
+                });
             } else {
-                loadEmailJS();
+                setTimeout(loadEmailJS, 100);
             }
         })();
     </script>

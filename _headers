@@ -1,5 +1,7 @@
 /*
-  Content-Security-Policy: script-src 'self' 'unsafe-inline' https://cdn.emailjs.com https://static.cloudflareinsights.com https://*.cloudflareinsights.com; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://*.cloudflareinsights.com;
+  # Temporarily removed CSP to test EmailJS loading
+  # If EmailJS works without CSP, we can add it back with proper configuration
+  # Content-Security-Policy: script-src 'self' 'unsafe-inline' https://cdn.emailjs.com https://static.cloudflareinsights.com https://*.cloudflareinsights.com https://cdn.jsdelivr.net; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://*.cloudflareinsights.com;
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
 
