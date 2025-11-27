@@ -313,10 +313,25 @@
     </footer>
     <script src="https://cdn.emailjs.com/sdk/3.11.0/email.min.js"></script>
     <script>
+        // Wait for EmailJS to load before initializing
         (function() {
-            emailjs.init({
-                publicKey: '_84eY4ppSzQCUkW8u',
-            });
+            function initEmailJS() {
+                if (typeof emailjs !== 'undefined') {
+                    emailjs.init({
+                        publicKey: '_84eY4ppSzQCUkW8u',
+                    });
+                    console.log('EmailJS initialized successfully');
+                } else {
+                    // Retry after a short delay if EmailJS isn't loaded yet
+                    setTimeout(initEmailJS, 100);
+                }
+            }
+            // Start initialization when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initEmailJS);
+            } else {
+                initEmailJS();
+            }
         })();
     </script>
 

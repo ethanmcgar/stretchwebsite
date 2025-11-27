@@ -273,10 +273,17 @@ document.addEventListener('DOMContentLoaded', () => {
         contactModalForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            // Verify EmailJS is loaded
+            // Verify EmailJS is loaded and initialized
             if (typeof emailjs === 'undefined') {
                 alert('Error: EmailJS is not loaded. Please check your internet connection and refresh the page.');
                 console.error('EmailJS is not defined. Make sure the EmailJS script is loaded.');
+                return;
+            }
+            
+            // Check if EmailJS is initialized (has a send method)
+            if (typeof emailjs.send !== 'function') {
+                alert('Error: EmailJS is not fully initialized. Please wait a moment and try again.');
+                console.error('EmailJS.send is not available. EmailJS may not be initialized yet.');
                 return;
             }
 
