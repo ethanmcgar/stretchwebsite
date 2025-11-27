@@ -205,6 +205,13 @@ document.querySelectorAll(".video-thumbnail-date").forEach(el => {
    Contact Modal + EmailJS send
 ----------------------------- */
 
+// EmailJS Configuration
+const EMAILJS_CONFIG = {
+    serviceId: 'service_5bx7shp',
+    templateId: 'template_nr6m35d',
+    recipientEmail: 'aidanstretch01@gmail.com' // UPDATE THIS with your actual email address
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const contactButton = document.getElementById('contactButton');
     const contactModal = document.getElementById('contact-modal');
@@ -246,17 +253,41 @@ document.addEventListener('DOMContentLoaded', () => {
         contactModalForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            // Optional: you can show a "sending..." state here
+            // Get form data
+            const formData = new FormData(contactModalForm);
+            
+            // Prepare template parameters
+            // Note: If your EmailJS template uses a static "To Email" configured in the dashboard,
+            // you don't need to pass to_email. If your template uses {{to_email}}, include it.
+            const templateParams = {
+                from_name: formData.get('from_name'),
+                reply_to: formData.get('reply_to'),
+                message: formData.get('message'),
+                to_email: EMAILJS_CONFIG.recipientEmail
+            };
 
+            // Show sending state
+            const submitButton = contactModalForm.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
+
+            // Send email using EmailJS
             emailjs
-                .sendForm('service_5bx7shp', 'template_nr6m35d', '#contactModalForm')
-                .then(() => {
+                .send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, templateParams)
+                .then((response) => {
+                    console.log('Email sent successfully!', response.status, response.text);
                     alert('Thank you — your message has been sent!');
+                    contactModalForm.reset();
                     closeModal();
                 })
                 .catch((error) => {
                     console.error('EmailJS error:', error);
                     alert('Sorry, something went wrong sending your message. Please try again later.');
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalButtonText;
                 });
         });
     }
