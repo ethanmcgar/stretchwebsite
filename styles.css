@@ -974,9 +974,13 @@ section {
         grid-template-columns: 1fr;
     }
 
+    .publications-grid {
+        grid-template-columns: 1fr;
+    }
+}
 
 
-    /* More button wrapper */
+/* More button wrapper */
 .videos-more-wrap {
   display: flex;
   justify-content: center;
@@ -986,21 +990,5 @@ section {
 /* Collapsible second grid */
 .videos-grid--extra.is-collapsed {
   display: none;
-}
-
-/* Optional: if your .btn already exists, this just gives a slightly “secondary” look */
-.btn.btn-secondary {
-  background: #ffffff;
-  border: 1px solid #cccccc;
-  color: #000000;
-}
-.btn.btn-secondary:hover {
-  background: #f5f5f5;
-}
-
-
-    .publications-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
