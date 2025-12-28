@@ -161,6 +161,21 @@ scrollToTopBtn.addEventListener('mouseleave', () => {
     scrollToTopBtn.style.transform = 'translateY(0)';
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("videosMoreBtn");
+  const extraGrid = document.getElementById("videosExtraGrid");
+
+  if (!btn || !extraGrid) return;
+
+  btn.addEventListener("click", () => {
+    const isCollapsed = extraGrid.classList.contains("is-collapsed");
+
+    extraGrid.classList.toggle("is-collapsed");
+    btn.setAttribute("aria-expanded", String(isCollapsed));
+
+    btn.textContent = isCollapsed ? "Show less" : "More…";
+  });
+});
 
 
 /* -------------------------------------------
