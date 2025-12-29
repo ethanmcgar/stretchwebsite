@@ -994,11 +994,6 @@ section {
 
 /* Videos "More" button */
 
-.videos-more-btn.btn-secondary {
-  background: #f0f0f0 !important;
-  color: #000 !important;
-  border: 1px solid #cccccc !important;
-}
 
 .videos-more-btn.btn-secondary:hover {
   background: #e0e0e0 !important;
@@ -1018,4 +1013,5 @@ section {
   color: #000000;
   border-color: #999999;
 }
+
 
