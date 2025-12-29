@@ -992,3 +992,16 @@ section {
   display: none;
 }
 
+/* Videos "More" button */
+.videos-more-btn {
+  background: #f0f0f0;       /* light grey */
+  color: #000000;
+  border: 1px solid #cccccc;
+}
+
+.videos-more-btn:hover {
+  background: #e0e0e0;
+  border-color: #999999;
+}
+
+
