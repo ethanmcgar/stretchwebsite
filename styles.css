@@ -1015,3 +1015,15 @@ section {
   border-color: #999 !important;
 }
 
+/* On-Air Commentary "More" button */
+.videos-more-btn {
+  background: #f0f0f0;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+.videos-more-btn:hover {
+  background: #e0e0e0;
+  border-color: #999;
+}
+
