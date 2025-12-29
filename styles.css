@@ -993,25 +993,24 @@ section {
 }
 
 /* Videos "More" button */
-
-
-.videos-more-btn.btn-secondary:hover {
-  background: #e0e0e0 !important;
-  border-color: #999 !important;
-}
-
 /* On-Air Commentary "More" button */
 
 /* On-Air Commentary "More" button — minimal grey style */
-.videos-more-btn {
-  background: transparent;
-  color: #666666;
+
+
+
+
+/* On-Air Commentary "More" button */
+button.btn.videos-more-btn {
+  background: #ffffff;          /* white background */
+  color: #666666;               /* grey text */
   border: 1px solid #cccccc;
+  box-shadow: none;
 }
 
-.videos-more-btn:hover {
-  color: #000000;
+button.btn.videos-more-btn:hover {
+  color: #000000;               /* black text on hover */
+  background: #ffffff;          /* stays white */
   border-color: #999999;
 }
-
 
