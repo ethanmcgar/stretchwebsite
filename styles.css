@@ -1014,3 +1014,17 @@ button.btn.videos-more-btn:hover {
   border-color: #999999;
 }
 
+/* On-Air Commentary "More" button (final) */
+button#videosMoreBtn.btn.videos-more-btn {
+  background: #ffffff;
+  color: #666666;
+  border: 1px solid #cccccc;   /* force a visible outline */
+  box-shadow: none;
+}
+
+button#videosMoreBtn.btn.videos-more-btn:hover {
+  color: #000000;
+  background: #ffffff;
+  border-color: #999999;
+}
+
