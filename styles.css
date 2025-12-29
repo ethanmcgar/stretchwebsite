@@ -1042,3 +1042,18 @@ button#videosMoreBtn.btn.videos-more-btn:hover {
   border-color: #999999;
 }
 
+.videos-more-btn {
+  padding: 0.6rem 1.4rem;
+  background: #ffffff;
+  color: #808080;
+  border: 1px solid #cccccc;
+  border-radius: 0.4rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.videos-more-btn:hover {
+  color: #000000;
+  border-color: #999999;
+}
+
