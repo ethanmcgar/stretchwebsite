@@ -1028,3 +1028,17 @@ button#videosMoreBtn.btn.videos-more-btn:hover {
   border-color: #999999;
 }
 
+/* Force style for On-Air Commentary "More…" button */
+#videosMoreBtn {
+  background-color: #ffffff;
+  color: #808080;
+  border: 1px solid #cccccc;
+  box-shadow: none;
+}
+
+/* Hover state */
+#videosMoreBtn:hover {
+  color: #000000;
+  border-color: #999999;
+}
+
