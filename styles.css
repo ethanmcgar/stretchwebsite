@@ -992,68 +992,24 @@ section {
   display: none;
 }
 
-/* Videos "More" button */
-/* On-Air Commentary "More" button */
-
-/* On-Air Commentary "More" button — minimal grey style */
-
-
-
-
-/* On-Air Commentary "More" button */
-button.btn.videos-more-btn {
-  background: #ffffff;          /* white background */
-  color: #666666;               /* grey text */
-  border: 1px solid #cccccc;
-  box-shadow: none;
-}
-
-button.btn.videos-more-btn:hover {
-  color: #000000;               /* black text on hover */
-  background: #ffffff;          /* stays white */
-  border-color: #999999;
-}
-
-/* On-Air Commentary "More" button (final) */
-button#videosMoreBtn.btn.videos-more-btn {
-  background: #ffffff;
-  color: #666666;
-  border: 1px solid #cccccc;   /* force a visible outline */
-  box-shadow: none;
-}
-
-button#videosMoreBtn.btn.videos-more-btn:hover {
-  color: #000000;
-  background: #ffffff;
-  border-color: #999999;
-}
-
-/* Force style for On-Air Commentary "More…" button */
+/* On-Air Commentary "More…" button */
 #videosMoreBtn {
-  background-color: #ffffff;
-  color: #808080;
-  border: 1px solid #cccccc;
+  background: none;
+  color: #808080;          /* grey */
+  border: none;
   box-shadow: none;
-}
-
-/* Hover state */
-#videosMoreBtn:hover {
-  color: #000000;
-  border-color: #999999;
-}
-
-.videos-more-btn {
   padding: 0.6rem 1.4rem;
-  background: #ffffff;
-  color: #808080;
-  border: 1px solid #cccccc;
-  border-radius: 0.4rem;
   font-weight: 500;
   cursor: pointer;
+  transition: color 0.2s ease;
 }
 
-.videos-more-btn:hover {
-  color: #000000;
-  border-color: #999999;
+/* Hover */
+#videosMoreBtn:hover {
+  color: #000000;          /* black */
+  background: none;
 }
+
+
+
 
