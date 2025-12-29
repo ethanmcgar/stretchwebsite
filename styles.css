@@ -993,23 +993,39 @@ section {
 }
 
 /* On-Air Commentary "More…" button */
+
+
+
+/* Force the More button to look like plain text */
 #videosMoreBtn {
-  background: none;
-  color: #808080;          /* grey */
-  border: none;
-  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
+
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+
+  color: #808080;
   padding: 0.6rem 1.4rem;
   font-weight: 500;
   cursor: pointer;
   transition: color 0.2s ease;
 }
 
-/* Hover */
+/* Hover: grey -> black */
 #videosMoreBtn:hover {
-  color: #000000;          /* black */
-  background: none;
+  color: #000000;
+  background: transparent !important;
 }
 
+/* Keep accessibility: show focus only for keyboard users */
+#videosMoreBtn:focus {
+  outline: none;
+}
+#videosMoreBtn:focus-visible {
+  outline: 2px solid #999999;
+  outline-offset: 2px;
+}
 
 
 
